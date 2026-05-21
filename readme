@@ -19,6 +19,7 @@ sudo systemctl start nginx
 
 # Check status:
 sudo systemctl status nginx
+ctrl + c to exit
 
 # 4. Allow HTTP and HTTPS Traffic (If firewall is enabled on VM)
 sudo ufw allow 'Nginx Full'
