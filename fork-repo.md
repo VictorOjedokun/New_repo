@@ -1,0 +1,28 @@
+5/17/2026
+6:42pm
+
+This is a repo created for rhemapath class on 5/12/2026 at 7:28pm.
+
+Steps needed to fork a repo:
+1. Paste the link in your browser
+2. Fork the repo
+3. copy the repo link from code
+4. create a folder in your desktop i.e practice
+5. Open with vscode
+
+ps: use this go download git before running anything on vscode: https://git-scm.com/download/win
+
+6. Open the terminal and run the command:
+
+git clone repo-link
+
+7. navigate to repo using
+
+cd repo-name
+
+8. create a readme folder and push to github i.e name.md
+The content of the the folder should be the date and time
+
+git add .
+git commit -m "add message here"
+git push origin main.
