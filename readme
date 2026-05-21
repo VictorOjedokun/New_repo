@@ -6,6 +6,9 @@ Steps needed to fork a repo:
 3. copy the repo link from code
 4. create a folder in your desktop i.e practice
 5. Open with vscode
+
+ps: use this go download git before running anything on vscode: https://git-scm.com/download/win
+
 6. Open the terminal and run the command:
 
 git clone repo-link
