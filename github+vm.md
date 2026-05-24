@@ -1,0 +1,99 @@
+21/5/2026
+# Deploying a Static HTML Website on an Ubuntu VM with Nginx
+
+This guide explains how to host a static HTML website from a GitHub repository on an Ubuntu VM using Nginx.
+
+# 1. Connect to the VM
+From Windows PowerShell run:
+ssh -i path/to/key.pem azureuser@YOUR_VM_IP
+
+# 2. Update the Server
+sudo apt update && sudo apt upgrade -y
+
+# 3. Install Nginx
+sudo apt install nginx -y
+
+# Enable and start Nginx:
+sudo systemctl enable nginx
+sudo systemctl start nginx
+
+# Check status:
+sudo systemctl status nginx
+ctrl + c to exit
+
+# 4. Allow SSH, HTTP and HTTPS Traffic (If firewall is enabled on VM)
+sudo ufw allow 'Nginx Full'
+sudo ufw enable
+sudo ufw allow OpenSSH
+
+# 5. Install Git
+sudo apt install git -y
+
+# 6. Give Ownership of `/var/www`
+
+This allows the `azureuser` account to manage website files without constantly using `sudo`.
+
+sudo chown -R azureuser:azureuser /var/www
+
+# 7. Clone Your GitHub Repository
+
+# Move into the web directory:
+cd /var/www
+
+# Clone the repository:
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+
+# 8. Configure Nginx
+
+# Create a new Nginx configuration file:
+
+sudo nano /etc/nginx/sites-available/mysite
+
+
+Paste this configuration edit your ip, repo name and  name of .html:
+
+server {
+    listen 80;
+    server_name YOUR_IP;
+
+    root /var/www/YOUR_REPO;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+
+Save and exit with the commands below:
+
+* CTRL + O
+* Enter
+* CTRL + X
+
+# 9. Enable the Site
+
+# Create a symbolic link:
+sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
+
+# Remove the default Nginx site:
+sudo rm /etc/nginx/sites-enabled/default
+
+# 10. Test Nginx Configuration
+sudo nginx -t
+
+# If successful, restart Nginx:
+sudo systemctl restart nginx
+
+# 11. Open the Website
+
+http://YOUR_VM_IP
+
+# 12. Updating the Website
+
+# SSH into the VM:
+
+cd /var/www/YOUR_REPO
+git pull
+
+
