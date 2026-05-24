@@ -1,98 +1,74 @@
-21/5/2026
-# Deploying a Static HTML Website on an Ubuntu VM with Nginx
+# CI/CD Deployment for a Static Website Using GitHub Actions
 
-This guide explains how to host a static HTML website from a GitHub repository on an Ubuntu VM using Nginx.
+# 1. Set up your VM
 
-# 1. Connect to the VM
-From Windows PowerShell run:
-ssh -i path/to/key.pem azureuser@YOUR_VM_IP
+# 2. follow instrutions to set up your VM in github+vm.md
 
-# 2. Update the Server
-sudo apt update && sudo apt upgrade -y
+# 3. Add GitHub secrets.
 
-# 3. Install Nginx
-sudo apt install nginx -y
+Add secrets:
 
-# Enable and start Nginx:
-sudo systemctl enable nginx
-sudo systemctl start nginx
+HOST	VM Public IP
+USERNAME	azureuser
+SSH_KEY	Contents of github-actions-key
+REPO_PATH  /var/www/New_repo 
 
-# Check status:
+# 4. Create GitHub Actions Workflow
+
+Create:
+
+.github/workflows/cicd.yml
+
+
+# 5. Commit and Push
+
+
+git add .
+git commit -m "Setup CI/CD"
+git push origin main
+```
+
+
+
+# 6. Verify Deployment
+
+Visit:
+
+http://YOUR_PUBLIC_IP
+
+
+Every push to the `main` branch will now automatically deploy to the VM.
+
+---
+
+# Useful Commands
+
+## Check Nginx Status
+
+```bash
 sudo systemctl status nginx
-ctrl + c to exit
+```
 
-# 4. Allow HTTP and HTTPS Traffic (If firewall is enabled on VM)
-sudo ufw allow 'Nginx Full'
-sudo ufw enable
+## Reload Nginx
 
-# 5. Install Git
-sudo apt install git -y
+```bash
+sudo systemctl reload nginx
+```
 
-# 6. Give Ownership of `/var/www`
+## Check Firewall Rules
 
-This allows the `azureuser` account to manage website files without constantly using `sudo`.
+```bash
+sudo ufw status
+```
 
-sudo chown -R azureuser:azureuser /var/www
+## Manually Pull Latest Changes
 
-# 7. Clone Your GitHub Repository
-
-# Move into the web directory:
-cd /var/www
-
-# Clone the repository:
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-
-# 8. Configure Nginx
-
-# Create a new Nginx configuration file:
-
-sudo nano /etc/nginx/sites-available/mysite
-
-
-Paste this configuration edit your ip, repo name and  name of .html:
-
-server {
-    listen 80;
-    server_name YOUR_IP;
-
-    root /var/www/YOUR_REPO;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-
-
-Save and exit with the commands below:
-
-* CTRL + O
-* Enter
-* CTRL + X
-
-# 9. Enable the Site
-
-# Create a symbolic link:
-sudo ln -s /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/
-
-# Remove the default Nginx site:
-sudo rm /etc/nginx/sites-enabled/default
-
-# 10. Test Nginx Configuration
-sudo nginx -t
-
-# If successful, restart Nginx:
-sudo systemctl restart nginx
-
-# 11. Open the Website
-
-http://YOUR_VM_IP
-
-# 12. Updating the Website
-
-# SSH into the VM:
-
+```bash
 cd /var/www/YOUR_REPO
-git pull
+git pull origin main
+```
+
+```
+```
 
 
