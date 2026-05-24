@@ -39,36 +39,3 @@ http://YOUR_PUBLIC_IP
 
 Every push to the `main` branch will now automatically deploy to the VM.
 
----
-
-# Useful Commands
-
-## Check Nginx Status
-
-```bash
-sudo systemctl status nginx
-```
-
-## Reload Nginx
-
-```bash
-sudo systemctl reload nginx
-```
-
-## Check Firewall Rules
-
-```bash
-sudo ufw status
-```
-
-## Manually Pull Latest Changes
-
-```bash
-cd /var/www/YOUR_REPO
-git pull origin main
-```
-
-```
-```
-
-
