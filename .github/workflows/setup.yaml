@@ -1,0 +1,50 @@
+name: Setup Server
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure VM
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo apt update
+            sudo apt install nginx git -y
+
+            sudo ufw allow OpenSSH
+            sudo ufw allow 'Nginx Full'
+
+            sudo chown -R azureuser:azureuser /var/www
+
+            cd /var/www
+            git clone https://github.com/VictorOjedokun/New_repo.git
+
+            sudo tee /etc/nginx/sites-available/mysite > /dev/null <<EOF
+            server {
+                listen 80;
+                server_name 102.37.104.131;
+
+                root /var/www/New_repo;
+                index new.html;
+
+                location / {
+                    try_files \$uri \$uri/ =404;
+                }
+            }
+            EOF
+
+            sudo ln -sf /etc/nginx/sites-available/mysite /etc/nginx/sites-enabled/mysite
+            sudo rm -f /etc/nginx/sites-enabled/default
+
+            sudo nginx -t
+            sudo systemctl restart nginx
