@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure DevOps Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>☁️ Azure VM + Blob Storage Demo</h1>
+
+        <p>
+            This website was downloaded from Azure Blob Storage
+            and deployed automatically to an Azure Virtual Machine
+            using Managed Identity.
+        </p>
+
+        <div class="card">
+            <h2>Deployment Status</h2>
+            <p id="status">Checking...</p>
+        </div>
+
+        <div class="card">
+            <h2>Current Time</h2>
+            <p id="clock"></p>
+        </div>
+
+        <button onclick="showMessage()">
+            Verify JavaScript
+        </button>
+
+        <p id="message"></p>
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+</html>

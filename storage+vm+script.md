@@ -81,18 +81,31 @@ Paste:
 
 set -e
 
-STORAGE_ACCOUNT="rhema"
+STORAGE_ACCOUNT="rhemapath"
 CONTAINER_NAME="files"
+
+echo "======================================"
+echo "Azure Blob Website Deployment"
+echo "======================================"
 
 echo "Updating packages..."
 sudo apt update
 
+# Install Nginx if missing
 if ! command -v nginx &> /dev/null
 then
     echo "Installing Nginx..."
     sudo apt install nginx -y
 fi
 
+# Install Azure CLI if missing
+if ! command -v az &> /dev/null
+then
+    echo "Installing Azure CLI..."
+    curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+fi
+
+echo "Starting Nginx..."
 sudo systemctl enable nginx
 sudo systemctl start nginx
 
@@ -104,11 +117,15 @@ rm -rf /tmp/site
 mkdir -p /tmp/site
 
 echo "Downloading website files..."
+
 az storage blob download-batch \
     --account-name $STORAGE_ACCOUNT \
     --source $CONTAINER_NAME \
     --destination /tmp/site \
     --auth-mode login
+
+echo "Downloaded files:"
+ls -lah /tmp/site
 
 echo "Creating web root..."
 sudo mkdir -p /var/www/html
@@ -117,12 +134,24 @@ echo "Deploying files..."
 sudo rm -rf /var/www/html/*
 sudo cp -r /tmp/site/* /var/www/html/
 
+echo "Setting permissions..."
 sudo chown -R www-data:www-data /var/www/html
 
 echo "Restarting Nginx..."
 sudo systemctl restart nginx
 
-echo "Deployment completed successfully."
+echo "======================================"
+echo "Deployment completed successfully"
+echo "======================================"
+
+echo "Files deployed:"
+ls -lah /var/www/html
+
+PUBLIC_IP=$(curl -s ifconfig.me || true)
+
+echo ""
+echo "Website URL:"
+echo "http://$PUBLIC_IP"
 
 ---
 
